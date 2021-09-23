@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="quiz-container"></div>
+
+    <script>
+      let url = "https://opentdb.com/api.php?amount=6&category=18";
+
+      fetch(url)
+        .then((res) => {
+          return res.json();
+        })
+        .then((data) => {
+          console.log(data.results);
+          displayQuestions(data.results);
+        });
+
+      const quizContainer = document.querySelector(".quiz-container");
+
+      const randomizeOptions = (optionsContainer) => {
+        let randomized = document.createDocumentFragment();
+        while (optionsContainer.children.length) {
+          randomized.appendChild(
+            optionsContainer.children[
+              Math.floor(Math.random() * optionsContainer.children.length)
+            ]
+          );
+        }
+
+        optionsContainer.appendChild(randomized);
+      };
+
+      const displayQuestions = (results) => {
+        for (let i = 0; i < results.length; i++) {
+          console.log(results[i].question);
+          console.log(results[i].correct_answer);
+
+          const question = document.createElement("h3");
+          question.innerHTML = results[i].question;
+          quizContainer.appendChild(question);
+
+          const optionsContainer = document.createElement("div");
+          optionsContainer.classList.add("options-container");
+          quizContainer.appendChild(optionsContainer);
+
+          const option = document.createElement("div");
+          option.innerHTML = results[i].correct_answer;
+          optionsContainer.appendChild(option);
+
+          for (let j = 0; j < results[i].incorrect_answers.length; j++) {
+            console.log(results[i].incorrect_answers[j]);
+            const option = document.createElement("div");
+            option.innerHTML = results[i].incorrect_answers[j];
+            optionsContainer.appendChild(option);
+          }
+
+          randomizeOptions(optionsContainer);
+
+          console.log("------------");
+        }
+      };
+    </script>
+  </body>
+</html>
